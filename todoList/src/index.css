@@ -266,4 +266,31 @@ ul::-webkit-scrollbar {
   cursor: pointer;
 }
 
+.footerContent{
+  display: flex;
+  justify-content: space-between;
+}
+.footerContent input {
+  outline: none;
+  border-radius: 5px;
+  border: 0.5px solid gray;
+  color: rgb(77, 77, 77);
+  padding: 0 25px 0 10px;
+  background: url(./assets/search.png) no-repeat scroll 98% 30%;
+  background-size: 10%;
+  position: relative; /* Add this */
+}
 
+.footerContent input::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 10px;
+  width: 1px;
+  height: calc(100% - 4px);
+  background-color: gray;
+}
+
+.footerContent input::placeholder{
+  color: rgb(137, 137, 137);
+}

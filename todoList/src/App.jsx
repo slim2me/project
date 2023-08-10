@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import 'reactjs-popup/dist/index.css';
-import { addItem,handleChange, clearList } from './utils/management.js'
-import {dayOfMonth,dayName,monthName} from './utils/date.js'
+import { addItem, handleChange, clearList,searchItem } from './utils/management.js'
+import { dayOfMonth, dayName, monthName } from './utils/date.js'
 import addIcon from './assets/add.png'
 import Task from "./components/task.jsx";
 
@@ -10,8 +10,10 @@ function App() {
   const [inputText, setInputText] = useState("");
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false)
+  const [filteredItems, setFilteredItems] = useState([]); 
   const reversed = items.slice().reverse();
-  
+  const filtredReversed = filteredItems.slice().reverse();
+
   return (
     <div className="container">
       <div>
@@ -22,12 +24,12 @@ function App() {
         <div className="form">
           <input
             placeholder={error ? "Field cannot be empty!" : undefined}
-            onChange={(event)=>handleChange(event, setInputText, setError)}
+            onChange={(event) => handleChange(event, setInputText, setError)}
             type="text"
             value={inputText}
             className={error ? "error" : ""}
           />
-          <img className="add" src={addIcon} onClick={()=>addItem(inputText, setInputText, setItems, setError)} />
+          <img className="add" src={addIcon} onClick={() => addItem(inputText, setInputText, setItems, setError,setFilteredItems)} />
         </div>
         <div className="date">
           <span>
@@ -39,19 +41,32 @@ function App() {
         </div>
         <hr />
         <div>
+          
           <ul>
-            {reversed.length > 0 && reversed.map((todoItem) => (
-              <Task key={todoItem.id} todoItem={todoItem} setItems={setItems} items={items} />
+        {filteredItems.length > 0
+          ? filtredReversed.map((todoItem) => (
+            <Task key={todoItem.id} todoItem={todoItem} setItems={setItems} items={items} />
+            ))
+          : reversed.map((todoItem) => (
+            <Task key={todoItem.id} todoItem={todoItem} setItems={setItems}  items={items} />
             ))}
-          </ul>
-
+      </ul>
         </div>
       </div>
-      <div className="footer" onClick={()=>clearList(setItems)}>
+      <div className="footer" >
         <hr />
-        <span style={{ visibility: items.length > 0 ? 'visible' : 'hidden' }} className="clear">
-          Clear
-        </span>
+        <div className="footerContent" >
+          <input
+            type="text"
+            name="search"
+            id="search"
+            placeholder="Search"
+            onChange={(event) => searchItem(event,setFilteredItems,items)}
+          />
+          <span onClick={() => clearList(setItems)}  className="clear">
+            Clear
+          </span>
+        </div>
       </div>
     </div>
   );
