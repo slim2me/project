@@ -17,7 +17,7 @@ export function handleChecked(id, setItems) {
 }
 
 
-export function searchItem(event, setFilteredItems, items) {
+export function searchItem(event, setFilteredItems, setIsEmpty, items) {
   const newValue = event.target.value.toLowerCase();
   if (newValue === "") {
     setFilteredItems([]);
@@ -25,7 +25,12 @@ export function searchItem(event, setFilteredItems, items) {
   const filteredItems = items.filter(item =>
     item.title.toLowerCase().includes(newValue)
   );
-  setFilteredItems(filteredItems);
+  if ((filteredItems.length < 1) && (newValue.length > 0)) {
+    setIsEmpty(true)
+  }else{
+    setFilteredItems(filteredItems);
+    setIsEmpty(false)
+  }
 }
 
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import 'reactjs-popup/dist/index.css';
-import { addItem, handleChange, clearList,searchItem } from './utils/management.js'
+import { addItem, handleChange, clearList, searchItem } from './utils/management.js'
 import { dayOfMonth, dayName, monthName } from './utils/date.js'
 import addIcon from './assets/add.png'
 import Task from "./components/task.jsx";
@@ -10,7 +10,8 @@ function App() {
   const [inputText, setInputText] = useState("");
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false)
-  const [filteredItems, setFilteredItems] = useState([]); 
+  const [isEmpty, setIsEmpty] = useState(false)
+  const [filteredItems, setFilteredItems] = useState([]);
   const reversed = items.slice().reverse();
   const filtredReversed = filteredItems.slice().reverse();
 
@@ -29,7 +30,7 @@ function App() {
             value={inputText}
             className={error ? "error" : ""}
           />
-          <img className="add" src={addIcon} onClick={() => addItem(inputText, setInputText, setItems, setError,setFilteredItems)} />
+          <img className="add" src={addIcon} onClick={() => addItem(inputText, setInputText, setItems, setError, setFilteredItems)} />
         </div>
         <div className="date">
           <span>
@@ -41,17 +42,23 @@ function App() {
         </div>
         <hr />
         <div>
-          
-          <ul>
-        {filteredItems.length > 0
-          ? filtredReversed.map((todoItem) => (
-            <Task key={todoItem.id} todoItem={todoItem} setItems={setItems} items={items} />
-            ))
-          : reversed.map((todoItem) => (
-            <Task key={todoItem.id} todoItem={todoItem} setItems={setItems}  items={items} />
-            ))}
-      </ul>
+          {items.length > 0 ? (
+            <ul>
+              {isEmpty === false && filteredItems.length > 0 ? (
+                filtredReversed.map((todoItem) => (
+                  <Task key={todoItem.id} todoItem={todoItem} setItems={setItems} items={items} />
+                ))
+              ) : (
+                (isEmpty===true) ? <p>No item found</p> : reversed.map((todoItem) => (
+                  <Task key={todoItem.id} todoItem={todoItem} setItems={setItems} items={items} />
+                ))
+              )}
+            </ul>
+          ) : (
+            <span>Empty list!</span>
+          )}
         </div>
+
       </div>
       <div className="footer" >
         <hr />
@@ -61,9 +68,9 @@ function App() {
             name="search"
             id="search"
             placeholder="Search"
-            onChange={(event) => searchItem(event,setFilteredItems,items)}
+            onChange={(event) => searchItem(event, setFilteredItems, setIsEmpty, items)}
           />
-          <span onClick={() => clearList(setItems)}  className="clear">
+          <span onClick={() => clearList(setItems)} className="clear">
             Clear
           </span>
         </div>
